@@ -16,14 +16,12 @@ ENV SUPERVISOR_PHP_USER="sail"
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu|http://ftp.riken.jp/Linux/ubuntu|g' /etc/apt/sources.list
+RUN sed -i 's|http://security.ubuntu.com/ubuntu|http://ftp.riken.jp/Linux/ubuntu|g' /etc/apt/sources.list
+
 RUN echo "Acquire::http::Pipeline-Depth 0;" > /etc/apt/apt.conf.d/99custom && \
     echo "Acquire::http::No-Cache true;" >> /etc/apt/apt.conf.d/99custom && \
     echo "Acquire::BrokenProxy    true;" >> /etc/apt/apt.conf.d/99custom
-
-RUN echo "deb http://mirror.raiolanetworks.com/ubuntu/ jammy main" > /etc/apt/sources.list && \
-    echo "deb-src http://mirror.raiolanetworks.com/ubuntu/ jammy main" >> /etc/apt/sources.list && \
-    echo "deb http://archive.ubuntu.com/ubuntu/ jammy universe" >> /etc/apt/sources.list && \
-    echo "deb http://security.ubuntu.com/ubuntu jammy-security main" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get upgrade -y \
     && mkdir -p /etc/apt/keyrings \
@@ -73,4 +71,3 @@ RUN chmod +x /usr/local/bin/start-container
 EXPOSE 80/tcp
 
 ENTRYPOINT ["start-container"]
-
